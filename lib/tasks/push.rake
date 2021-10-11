@@ -7,6 +7,7 @@ namespace :push_line do
     require 'rexml/document'
     require 'active_support'
     require 'active_support/core_ext'
+    require 'date'
   
     # デバッグ用
     #p ENV["LINE_CHANNEL_SECRET"]
@@ -38,25 +39,39 @@ namespace :push_line do
     
     # PUSH通知文言を作成
     if RAIN_FALL_CHANCE_MORNING >= 70
-      rain = "朝から雨が降るでしょう。\n傘を持ち歩きましょう。"
+      rain = "朝から雨が降るでしょう\u{2614}\n傘を持ち歩きましょう。"
       break
     elseif RAIN_FALL_CHANCE_AFTERNOON >= 70
-      rain = "昼から雨が降るでしょう。\n傘を持ち歩きましょう。"
+      rain = "昼から雨が降るでしょう\u{2614}\n傘を持ち歩きましょう。"
       break
     elseif RAIN_FALL_CHANCE_NIGHT >= 70
-      rain = "夜から雨が降るでしょう。\n帰りが遅くなる場合は傘を持ち歩きましょう。"
+      rain = "夜から雨が降るでしょう\u{2614}\n帰りが遅くなる場合は傘を持ち歩きましょう。"
       break
     else
-      rain = "雨は降らないでしょう。\n傘は不要です。"
+      rain = "雨は降らないでしょう\u{1F324}\n傘は不要です。"
     end
     
-    push = "今日の天気：#{WEATHER}\n最高気温：#{MAX_TEMP}℃\n最低気温：#{MIN_TEMP}℃\n#{rain}"
+    #d = Date.today
+    date = Date.today.strftime("%Y年%m月%d日")
+    #p date
+    push = "===  #{date}  ===\n\n【気象情報】\n天気\u{1F300}：#{WEATHER}\n気温\u{1F321}：#{MAX_TEMP}℃/#{MIN_TEMP}℃\n\n【ひとこと】\n#{rain}"
     
     # LINEに通知するメッセージを作成
-    message = {
+    message =[{
       type: 'text',
-      text: push
-    }
+      text: push ,
+#      emojis:[
+#      {
+#        "index": 66,
+#        "productId": "5ac1bfd5040ab15980c9b435",
+#        "emojiId": "002"
+#      }]
+    },{
+      type: "sticker",
+      packageId: "8515",
+      stickerId: "16581260"
+    }]
+    
     client = Line::Bot::Client.new { |config|
       config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
       config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
