@@ -78,7 +78,8 @@ namespace :push_line do
     }
     
     # LINEにPUSH通知を配信
-    response = client.push_message(ENV["LINE_CHANNEL_USER_ID"], message)
+    #response = client.push_message(ENV["LINE_CHANNEL_USER_ID"], message)
+    response = client.broadcast(message)
     p response
   end
 end
