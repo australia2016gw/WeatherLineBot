@@ -8,11 +8,6 @@ namespace :push_line do
     require 'active_support'
     require 'active_support/core_ext'
     require 'date'
-  
-    # デバッグ用
-    #p ENV["LINE_CHANNEL_SECRET"]
-    #p ENV["LINE_CHANNEL_TOKEN"]
-    #p ENV["LINE_CHANNEL_USER_ID"]
     
     # お天気サイトからxml形式で気象情報を取得してくる
     url= "https://www.drk7.jp/weather/xml/11.xml"
@@ -29,7 +24,7 @@ namespace :push_line do
     MIN_TEMP = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["temperature"]["range"][1].to_i
     WEATHER = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["weather"]
     
-    # 変数値確認用
+    # 変数確認用
     #p RAIN_FALL_CHANCE_MORNING
     #p RAIN_FALL_CHANCE_AFTERNOON
     #p RAIN_FALL_CHANCE_NIGHT
@@ -38,38 +33,41 @@ namespace :push_line do
     #p WEATHER
     
     # PUSH通知文言を作成
-    if RAIN_FALL_CHANCE_MORNING >= 70
-      rain = "朝から雨が降るでしょう\u{2614}\n傘を持ち歩きましょう。"
-      break
-    elseif RAIN_FALL_CHANCE_AFTERNOON >= 70
-      rain = "昼から雨が降るでしょう\u{2614}\n傘を持ち歩きましょう。"
-      break
-    elseif RAIN_FALL_CHANCE_NIGHT >= 70
-      rain = "夜から雨が降るでしょう\u{2614}\n帰りが遅くなる場合は傘を持ち歩きましょう。"
-      break
-    else
-      rain = "雨は降らないでしょう\u{1F324}\n傘は不要です。"
+    while true do
+      if RAIN_FALL_CHANCE_MORNING >= 70 then
+        rain = "朝から雨が降るでしょう\u{2614}\n傘を持ち歩きましょう。"
+        package = "446"
+        sticker = "1994"
+        break
+      elsif RAIN_FALL_CHANCE_AFTERNOON >= 70 then
+        rain = "昼から雨が降るでしょう\u{2614}\n傘を持ち歩きましょう。"
+        package = "6136"
+        sticker = "10551394"
+        break
+      elsif RAIN_FALL_CHANCE_NIGHT >= 70 then
+        rain = "夜から雨が降るでしょう\u{2614}\n帰りが遅くなる場合は傘を持ち歩きましょう。"
+        package = "446"
+        sticker = "2005"
+        break
+      else
+        rain = "雨は降らないでしょう\u{1F324}\n傘は不要です。"
+        package = "8515"
+        sticker = "16581260"
+        break
+      end
     end
     
-    #d = Date.today
     date = Date.today.strftime("%Y年%m月%d日")
-    #p date
     push = "===  #{date}  ===\n\n【気象情報】\n天気\u{1F300}：#{WEATHER}\n気温\u{1F321}：#{MAX_TEMP}℃/#{MIN_TEMP}℃\n\n【ひとこと】\n#{rain}"
     
     # LINEに通知するメッセージを作成
     message =[{
       type: 'text',
       text: push ,
-#      emojis:[
-#      {
-#        "index": 66,
-#        "productId": "5ac1bfd5040ab15980c9b435",
-#        "emojiId": "002"
-#      }]
     },{
       type: "sticker",
-      packageId: "8515",
-      stickerId: "16581260"
+      packageId: package,
+      stickerId: sticker
     }]
     
     client = Line::Bot::Client.new { |config|
@@ -78,7 +76,9 @@ namespace :push_line do
     }
     
     # LINEにPUSH通知を配信
+    # 個別配信
     #response = client.push_message(ENV["LINE_CHANNEL_USER_ID"], message)
+    # broadcastでフレンド全員へpush配信を行う
     response = client.broadcast(message)
     p response
   end
