@@ -20,6 +20,9 @@ namespace :push_line do
     RAIN_FALL_CHANCE_MORNING = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["rainfallchance"]["period"][1].to_i
     RAIN_FALL_CHANCE_AFTERNOON = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["rainfallchance"]["period"][2].to_i
     RAIN_FALL_CHANCE_NIGHT = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["rainfallchance"]["period"][3].to_i
+    #RAIN_FALL_CHANCE_MORNING = 39
+    #RAIN_FALL_CHANCE_AFTERNOON = 39
+    #RAIN_FALL_CHANCE_NIGHT = 39
     MAX_TEMP = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["temperature"]["range"][0].to_i
     MIN_TEMP = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["temperature"]["range"][1].to_i
     WEATHER = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["weather"]
@@ -46,19 +49,24 @@ namespace :push_line do
         break
       elsif RAIN_FALL_CHANCE_NIGHT >= 70 then
         rain = "夜から雨が降るでしょう\u{2614}\n帰りが遅くなる場合は傘を持ち歩きましょう。"
-        package = "446"
-        sticker = "2005"
+        package = "11539"
+        sticker = "52114141"
+        break
+      elsif RAIN_FALL_CHANCE_MORNING >= 40 || RAIN_FALL_CHANCE_AFTERNOON >= 40 || RAIN_FALL_CHANCE_NIGHT >= 40
+        rain = "雨が降るかもしれません。折りたたみ傘を持ち歩きましょう。"
+        package = "789"
+        sticker = "10883"
         break
       else
         rain = "雨は降らないでしょう\u{1F324}\n傘は不要です。"
-        package = "8515"
-        sticker = "16581260"
+        package = "789"
+        sticker = "10871"
         break
       end
     end
     
     date = Date.today.strftime("%Y年%m月%d日")
-    push = "===  #{date}  ===\n\n【気象情報】\n天気\u{1F300}：#{WEATHER}\n気温\u{1F321}：#{MAX_TEMP}℃/#{MIN_TEMP}℃\n\n【ひとこと】\n#{rain}"
+    push = "===  #{date}  ===\n\n【気象情報】\n天気\u{1F300}：#{WEATHER}\n気温\u{1F321}：#{MAX_TEMP}℃/#{MIN_TEMP}℃\n降水確率：#{RAIN_FALL_CHANCE_MORNING}%/#{RAIN_FALL_CHANCE_AFTERNOON}%/#{RAIN_FALL_CHANCE_NIGHT}%\n\n【ひとこと】\n#{rain}"
     
     # LINEに通知するメッセージを作成
     message =[{
