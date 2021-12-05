@@ -1,24 +1,14 @@
-# README
+# gemのインストール
+　bundle install
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+＃環境変数
+　■環境変数の設定方法
+　　https://qiita.com/yuichir43705457/items/7cfcae6546876086b849
+ 
+　■設定パラメータ
+　　export LINE_CHANNEL_USER_ID='自身で作成したLINEアカウントのユーザID'
+　　export LINE_CHANNEL_SECRET='自身で作成したLINEアカウントのシークレットキー'
+　　export LINE_CHANNEL_TOKEN='自身で作成したLINEアカウントのトークンキー'
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# PUSH配信タスクの実行
+　rake push_line:push_line_message_morning
