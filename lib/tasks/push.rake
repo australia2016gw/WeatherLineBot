@@ -10,27 +10,31 @@ namespace :push_line do
     require 'date'
     
     # お天気サイトからxml形式で気象情報を取得してくる
-    url= "https://www.drk7.jp/weather/xml/11.xml"
+    # 埼玉県のお天気情報
+    #url= "https://www.drk7.jp/weather/xml/11.xml"
+    # 埼玉県のお天気情報
+    url= "https://www.drk7.jp/weather/xml/13.xml"
     xml  = open( url ).read.toutf8
     
     # xmlをハッシュに変換
     hash = Hash.from_xml(xml)
-    
     # 気象情報を変数に代入
-    RAIN_FALL_CHANCE_MORNING = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["rainfallchance"]["period"][1].to_i
-    RAIN_FALL_CHANCE_AFTERNOON = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["rainfallchance"]["period"][2].to_i
-    RAIN_FALL_CHANCE_NIGHT = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["rainfallchance"]["period"][3].to_i
-    #RAIN_FALL_CHANCE_MORNING = 39
-    #RAIN_FALL_CHANCE_AFTERNOON = 39
-    #RAIN_FALL_CHANCE_NIGHT = 39
-    MAX_TEMP = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["temperature"]["range"][0].to_i
-    MIN_TEMP = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["temperature"]["range"][1].to_i
-    WEATHER = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["weather"]
+    # 埼玉南部
+    #RAIN_FALL_CHANCE_MORNING = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["rainfallchance"]["period"][1].to_i
+    #RAIN_FALL_CHANCE_AFTERNOON = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["rainfallchance"]["period"][2].to_i
+    #RAIN_FALL_CHANCE_NIGHT = hash["weatherforecast"]["pref"]["area"][1]["info"][0]["rainfallchance"]["period"][3].to_i
+    # 東京地方
+    RAIN_FALL_CHANCE_MORNING = hash["weatherforecast"]["pref"]["area"][3]["info"][0]["rainfallchance"]["period"][1].to_i
+    RAIN_FALL_CHANCE_AFTERNOON = hash["weatherforecast"]["pref"]["area"][3]["info"][0]["rainfallchance"]["period"][2].to_i
+    RAIN_FALL_CHANCE_NIGHT = hash["weatherforecast"]["pref"]["area"][3]["info"][0]["rainfallchance"]["period"][3].to_i
+    MAX_TEMP = hash["weatherforecast"]["pref"]["area"][3]["info"][0]["temperature"]["range"][0].to_i
+    MIN_TEMP = hash["weatherforecast"]["pref"]["area"][3]["info"][0]["temperature"]["range"][1].to_i
+    WEATHER = hash["weatherforecast"]["pref"]["area"][3]["info"][0]["weather"]
     
     # 変数確認用
-    #p RAIN_FALL_CHANCE_MORNING
-    #p RAIN_FALL_CHANCE_AFTERNOON
-    #p RAIN_FALL_CHANCE_NIGHT
+    p RAIN_FALL_CHANCE_MORNING
+    p RAIN_FALL_CHANCE_AFTERNOON
+    p RAIN_FALL_CHANCE_NIGHT
     #p MAX_TEMP
     #p MIN_TEMP
     #p WEATHER
